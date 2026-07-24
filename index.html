@@ -1,7 +1,7 @@
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard Lead CC0014</title><style>
+<title>Dashboard Lead CC0014</title><script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><style>
 :root{--ink:#173a33;--orange:#ef6c35;--cream:#f2eee3;--paper:#fffdf8;--line:#d9d4c8;--muted:#6e7a76}*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Segoe UI,Arial,sans-serif}.top{padding:22px 5vw;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;letter-spacing:.12em}.brand b{color:var(--orange)}.hero{padding:55px 5vw 38px;display:flex;justify-content:space-between;align-items:end;gap:30px;border-bottom:1px solid var(--line)}.eyebrow{font-size:11px;color:var(--orange);font-weight:800;letter-spacing:.15em}h1{font:500 clamp(40px,6vw,76px)/.95 Georgia,serif;margin:12px 0 0}h1 em{color:var(--orange);font-weight:400}.filter{background:var(--paper);padding:22px;border-top:4px solid var(--orange);min-width:620px}.filter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.filter label{display:block;font-size:11px;font-weight:800;margin-bottom:9px;text-transform:uppercase}.filter select,.filter input{width:100%;padding:12px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700;min-height:43px}.kpis{display:grid;grid-template-columns:repeat(5,1fr);padding:0 5vw;border-bottom:1px solid var(--line)}.kpi{padding:30px 20px;border-right:1px solid var(--line)}.kpi:first-child{padding-left:0}.kpi:last-child{border:0}.kpi span{font-size:11px;color:var(--muted);text-transform:uppercase}.kpi strong{display:block;font:500 42px Georgia,serif;margin:10px 0}.kpi small{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}.panel{background:var(--paper);padding:28px;min-height:300px}.panel h2{font:500 21px Georgia,serif;margin:0 0 25px}.wide{grid-column:span 2}.bars{display:grid;gap:15px}.rowtop{display:flex;justify-content:space-between;gap:12px;font-size:12px}.rowtop span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}.track{height:7px;background:#ebe7dd;margin-top:6px}.fill{height:100%;background:var(--orange)}.trend{height:220px;display:flex;align-items:end;gap:3px;border-bottom:1px solid var(--line)}.day{flex:1;height:100%;display:flex;align-items:end;gap:1px}.day i,.day b{width:50%;min-height:1px}.day i{background:var(--orange)}.day b{background:var(--ink)}.legend{font-size:11px;color:var(--muted);margin-top:12px}.tablebox{margin:35px 5vw;background:var(--paper);padding:28px;overflow:auto}.table-head{display:flex;align-items:center;justify-content:space-between;gap:18px}.table-head select{padding:9px 12px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:700}table{border-collapse:collapse;width:100%;min-width:850px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e8e3d8;font-size:12px}th{font-size:10px;text-transform:uppercase;color:var(--muted)}.tag{background:#e4eee9;padding:4px 8px;font-weight:700}@media(max-width:1100px){.hero{display:block}.filter{margin-top:30px;min-width:0}.filter-grid{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.wide{grid-column:auto}}@media(max-width:500px){.filter-grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.kpi{border-right:0;border-bottom:1px solid var(--line)}}
-</style></head><body><header class="top"><div class="brand"><b>D</b> DATGROUP</div><small>Dashboard dữ liệu · CC0014</small></header>
+.top-actions{display:flex;align-items:center;gap:12px}.sync-state{font-size:12px;color:var(--muted)}.upload-button{display:inline-block;padding:11px 16px;border:1px solid var(--ink);background:var(--paper);font-size:12px;font-weight:800;cursor:pointer}.upload-button:hover{background:var(--ink);color:#fff}.upload-button input{display:none}@media(max-width:600px){.top-actions{align-items:flex-end;flex-direction:column}.sync-state{font-size:10px}.upload-button{padding:9px 11px}}</style></head><body><header class="top"><div class="brand"><b>D</b> DATGROUP</div><div class="top-actions"><span class="sync-state" id="syncState">Đang tải dữ liệu dùng chung…</span><label class="upload-button"><input id="excelFile" type="file" accept=".xlsx,.xls">Cập nhật file Excel</label></div></header>
 <section class="hero"><div><div class="eyebrow">PHÂN TÍCH LEAD THEO TELE</div><h1>Hiệu suất của<br><em id="teleTitle">Toàn đội telesales</em></h1></div><div class="filter"><div class="filter-grid"><div><label for="source">Nhóm phễu</label><select id="source"><option value="all">Customercare + Marketing</option><option value="Customercare">Customercare</option><option value="Marketing">Marketing</option></select></div><div><label for="tele">Telesales phụ trách</label><select id="tele"></select></div><div><label for="timeMode">Lọc thời gian</label><select id="timeMode"><option value="all">Tất cả</option><option value="day">Theo ngày</option><option value="month">Theo tháng</option><option value="year">Theo năm</option></select></div><div><label for="timeValue">Giá trị</label><div id="timeControl"></div></div></div></div></section>
 <section class="kpis" id="kpis"></section><section class="grid"><article class="panel wide"><h2>Nhịp tạo & chuyển đổi lead</h2><div class="trend" id="trend"></div><div class="legend">Cam: Lead mới &nbsp; · &nbsp; Xanh: Chuyển đổi</div></article><article class="panel"><h2>Trạng thái lead</h2><div id="status"></div></article><article class="panel"><h2>Chất lượng phễu</h2><div id="funnel"></div></article><article class="panel"><h2>Lead theo mảng</h2><div id="area"></div></article><article class="panel"><h2>Lý do đóng lead</h2><div id="reason"></div></article></section>
 <section class="tablebox"><div class="table-head"><h2>Tổng hợp theo thời gian</h2><select id="summaryMode"><option value="month">Theo tháng</option><option value="quarter">Theo quý</option></select></div><table><thead><tr><th>Thời kỳ</th><th>Tổng lead</th><th>Chưa sàng lọc</th><th>Đã sàng lọc</th><th>Sale nhận Opty</th><th>Đóng không tiềm năng</th><th>Tỷ lệ chuyển đổi</th></tr></thead><tbody id="periodRows"></tbody></table></section>
@@ -16,4 +16,69 @@ function filteredRows(){const value=document.querySelector('#timeValue')?.value|
 function bars(id,items){const shown=(items||[]).slice(0,8),max=Math.max(...shown.map(x=>x.value),1);document.querySelector(id).innerHTML='<div class="bars">'+shown.map(x=>'<div><div class="rowtop"><span>'+x.name+'</span><strong>'+fmt.format(x.value)+'</strong></div><div class="track"><div class="fill" style="width:'+(x.value/max*100)+'%"></div></div></div>').join('')+'</div>'}
 function drawPeriodTable(rows){const groups=new Map(),mode=summaryMode.value;for(const r of rows){if(!r.created)continue;const y=r.created.slice(0,4),m=Number(r.created.slice(5,7)),key=mode==='month'?r.created.slice(0,7):y+'-Q'+Math.ceil(m/3);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(r)}document.querySelector('#periodRows').innerHTML=[...groups].sort((a,b)=>b[0].localeCompare(a[0])).map(([key,items])=>{const a=aggregate(items);return'<tr><td><strong>'+key+'</strong></td><td>'+fmt.format(a.kpis.total)+'</td><td>'+fmt.format(a.kpis.unscreened)+'</td><td>'+fmt.format(a.kpis.screened)+'</td><td>'+fmt.format(a.kpis.salesAccepted)+'</td><td>'+fmt.format(a.kpis.nonPotentialClosed)+'</td><td>'+(a.kpis.conversionRate*100).toFixed(1)+'%</td></tr>'}).join('')}
 function draw(){const rows=filteredRows(),d=aggregate(rows),name=tele.value,sourceLabel=source.value==='all'?'Customercare + Marketing':source.value;document.querySelector('#teleTitle').textContent=(name==='all'?'Toàn đội telesales':name)+' · '+sourceLabel;const k=d.kpis;document.querySelector('#kpis').innerHTML=[['Tổng lead',k.total,'Hồ sơ trong kỳ'],['Chưa sàng lọc',k.unscreened,'MEL + MAL đang Mở'],['Đã sàng lọc',k.screened,'MQL, MUQL, SAL, SUAL + MAL Đóng'],['Sale đồng ý nhận Opty',k.salesAccepted,'Nhóm phễu SAL'],['Đóng không tiềm năng',k.nonPotentialClosed,'MUQL có trạng thái Đóng']].map(x=>'<article class="kpi"><span>'+x[0]+'</span><strong>'+fmt.format(x[1])+'</strong><small>'+x[2]+'</small></article>').join('');bars('#status',d.dimensions.status);bars('#funnel',d.dimensions.funnel);bars('#area',d.dimensions.area);bars('#reason',d.dimensions.closeReason);const days=d.daily.slice(-60),max=Math.max(...days.map(x=>Math.max(x.created,x.converted)),1);document.querySelector('#trend').innerHTML=days.map(x=>'<div class="day" title="'+date(x.date)+': '+x.created+' mới, '+x.converted+' chuyển đổi"><i style="height:'+(x.created/max*100)+'%"></i><b style="height:'+(x.converted/max*100)+'%"></b></div>').join('');drawPeriodTable(rows);document.querySelector('#leads').innerHTML=d.recent.slice(0,30).map(r=>'<tr><td>'+date(r.created)+'</td><td>'+(r.company||'—')+'</td><td>'+(r.area||'—')+'</td><td>'+(r.owner||'—')+'</td><td><span class="tag">'+(r.funnel||'—')+'</span></td><td>'+r.status+'</td><td>'+(r.province||'—')+'</td></tr>').join('')}
-source.addEventListener('change',()=>{fillTele();draw()});tele.addEventListener('change',draw);timeMode.addEventListener('change',()=>{renderTimeControl();draw()});summaryMode.addEventListener('change',draw);fillTele();renderTimeControl();draw();</script></body></html>
+source.addEventListener('change',()=>{fillTele();draw()});tele.addEventListener('change',draw);timeMode.addEventListener('change',()=>{renderTimeControl();draw()});summaryMode.addEventListener('change',draw);fillTele();renderTimeControl();draw();</script>
+<script>
+const SHARED_API="https://script.google.com/macros/s/AKfycbz0MmbaC1zaQzMQsL5VSJoftJZxrerLSxZ7wkWwYsp7AaxKPJTWaMzl5cHoTUFVb1Ah/exec";
+const syncState=document.querySelector('#syncState');
+const excelFile=document.querySelector('#excelFile');
+const mapSharedRows=rows=>rows.map(r=>({company:r[0],area:r[1],owner:r[2],funnel:r[3],status:r[4],province:r[5],created:r[6],converted:r[7],source:r[8],closeReason:r[9]}));
+async function loadSharedData(){
+  try{
+    const response=await fetch(SHARED_API);
+    const result=await response.json();
+    if(!result.ok||!Array.isArray(result.rows))throw new Error('API không trả dữ liệu');
+    DATA.rawLeads=mapSharedRows(result.rows);
+    fillTele();renderTimeControl();draw();
+    syncState.textContent='Dữ liệu chung · '+fmt.format(result.rows.length)+' lead · '+new Date(result.updatedAt).toLocaleString('vi-VN');
+  }catch(error){
+    syncState.textContent='Đang dùng bản dữ liệu gần nhất';
+  }
+}
+function normalizeExcelDate(value){
+  if(!value)return '';
+  if(value instanceof Date)return value.toISOString().slice(0,10);
+  if(typeof value==='number'){
+    const dateParts=XLSX.SSF.parse_date_code(value);
+    return dateParts?String(dateParts.y).padStart(4,'0')+'-'+String(dateParts.m).padStart(2,'0')+'-'+String(dateParts.d).padStart(2,'0'):'';
+  }
+  const parsed=new Date(value);
+  return Number.isNaN(parsed.getTime())?String(value):parsed.toISOString().slice(0,10);
+}
+async function uploadSharedExcel(file){
+  if(!file)return;
+  syncState.textContent='Đang cập nhật '+file.name+'…';
+  try{
+    const workbook=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:true});
+    const records=XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]],{defval:''});
+    const pick=(record,names)=>{for(const name of names)if(Object.prototype.hasOwnProperty.call(record,name))return record[name];return ''};
+    const rows=records.map(record=>{
+      const sourceName=String(pick(record,['Nhóm phểu','Nhóm phễu'])).trim();
+      return [
+        String(pick(record,['Tên công ty'])),
+        String(pick(record,['Mảng'])),
+        String(pick(record,['Telesales phụ trách'])||'Chưa phân công'),
+        String(pick(record,['Mức độ chuyển đổi'])),
+        String(pick(record,['Trạng thái'])),
+        String(pick(record,['Tỉnh/Thành'])),
+        normalizeExcelDate(pick(record,['Ngày tạo'])),
+        normalizeExcelDate(pick(record,['Ngày chuyển đổi'])),
+        sourceName,
+        String(pick(record,['Nguyên nhân đóng Lead'])),
+      ];
+    }).filter(row=>['customercare','marketing'].includes(row[8].toLowerCase().replace(/\s+/g,'')))
+      .map(row=>{row[8]=row[8].toLowerCase().includes('customercare')?'Customercare':'Marketing';return row});
+    if(!rows.length)throw new Error('Không tìm thấy dữ liệu Customercare/Marketing');
+    await fetch(SHARED_API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({rows})});
+    DATA.rawLeads=mapSharedRows(rows);
+    fillTele();renderTimeControl();draw();
+    syncState.textContent='Đã cập nhật '+fmt.format(rows.length)+' lead · '+new Date().toLocaleString('vi-VN');
+    setTimeout(loadSharedData,3000);
+  }catch(error){
+    syncState.textContent='Không cập nhật được: '+error.message;
+  }finally{
+    excelFile.value='';
+  }
+}
+excelFile.addEventListener('change',()=>uploadSharedExcel(excelFile.files[0]));
+loadSharedData();
+</script></body></html>
