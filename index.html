@@ -45,6 +45,9 @@ filteredRows=function(){
 const periodTable=document.querySelector('#periodRows')?.closest('table');
 const periodHeaders=periodTable?.querySelectorAll('th');
 if(periodHeaders?.length){
+  const awaitingHeader=document.createElement('th');
+  awaitingHeader.textContent='Chờ Sale chấp nhận (MQL)';
+  periodHeaders[3].after(awaitingHeader);
   periodHeaders[periodHeaders.length-1].textContent='Sale nhận Opty / Tổng lead';
   const closeRateHeader=document.createElement('th');
   closeRateHeader.textContent='Đóng không tiềm năng / Tổng lead';
@@ -61,7 +64,8 @@ drawPeriodTable=function(rows){
   }
   document.querySelector('#periodRows').innerHTML=[...groups].sort((a,b)=>b[0].localeCompare(a[0])).map(([key,items])=>{
     const result=aggregate(items),kpi=result.kpis,total=kpi.total||1;
-    return '<tr><td><strong>'+key+'</strong></td><td>'+fmt.format(kpi.total)+'</td><td>'+fmt.format(kpi.unscreened)+'</td><td>'+fmt.format(kpi.screened)+'</td><td>'+fmt.format(kpi.salesAccepted)+'</td><td>'+fmt.format(kpi.nonPotentialClosed)+'</td><td>'+(kpi.salesAccepted/total*100).toFixed(1)+'%</td><td>'+(kpi.nonPotentialClosed/total*100).toFixed(1)+'%</td></tr>';
+    const awaitingSale=items.filter(item=>String(item.funnel||'').trim().toUpperCase()==='MQL').length;
+    return '<tr><td><strong>'+key+'</strong></td><td>'+fmt.format(kpi.total)+'</td><td>'+fmt.format(kpi.unscreened)+'</td><td>'+fmt.format(kpi.screened)+'</td><td>'+fmt.format(awaitingSale)+'</td><td>'+fmt.format(kpi.salesAccepted)+'</td><td>'+fmt.format(kpi.nonPotentialClosed)+'</td><td>'+(kpi.salesAccepted/total*100).toFixed(1)+'%</td><td>'+(kpi.nonPotentialClosed/total*100).toFixed(1)+'%</td></tr>';
   }).join('');
 };
 async function loadSharedData(){
