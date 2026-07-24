@@ -69,25 +69,31 @@ async function uploadSharedExcel(file){
   syncState.textContent='Đang cập nhật '+file.name+'…';
   try{
     const workbook=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:true});
-    const sourceSheetName=workbook.SheetNames.find(name=>name.toLowerCase().replace(/\s+/g,'').includes('dashboardlead'))||workbook.SheetNames.find(name=>{
-      const preview=XLSX.utils.sheet_to_json(workbook.Sheets[name],{header:1,defval:'',range:0}).slice(0,10);
-      return preview.some(row=>row.includes('Nhóm phểu')||row.includes('Nhóm phễu'));
-    })||workbook.SheetNames[0];
-    const records=XLSX.utils.sheet_to_json(workbook.Sheets[sourceSheetName],{defval:''});
-    const pick=(record,names)=>{for(const name of names)if(Object.prototype.hasOwnProperty.call(record,name))return record[name];return ''};
-    const rows=records.map(record=>{
-      const sourceName=String(pick(record,['Nhóm phểu','Nhóm phễu'])).trim();
+    const sourceSheetName=workbook.SheetNames.find(name=>name.toLowerCase().replace(/\s+/g,'').includes('dashboardlead'))||workbook.SheetNames[0];
+    const matrix=XLSX.utils.sheet_to_json(workbook.Sheets[sourceSheetName],{header:1,defval:''});
+    const normalizeHeader=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const headerRowIndex=Math.max(0,matrix.findIndex(row=>row.some(cell=>normalizeHeader(cell)==='nhomphieu')&&row.some(cell=>normalizeHeader(cell)==='mucdochuyendoi')));
+    const headers=matrix[headerRowIndex].map(normalizeHeader);
+    const index=(name,fallback)=>{const found=headers.indexOf(name);return found>=0?found:fallback};
+    const columns={
+      company:index('tencongty',3),area:index('mang',4),owner:index('telesalesphutrach',5),
+      funnel:index('mucdochuyendoi',11),status:index('trangthai',12),province:index('tinhthanh',8),
+      created:index('ngaytao',15),converted:index('ngaychuyendoi',16),source:index('nhomphieu',10),
+      closeReason:index('nguyennhandonglead',13)
+    };
+    const rows=matrix.slice(headerRowIndex+1).map(record=>{
+      const sourceName=String(record[columns.source]||'').trim();
       return [
-        String(pick(record,['Tên công ty'])),
-        String(pick(record,['Mảng'])),
-        String(pick(record,['Telesales phụ trách'])||'Chưa phân công'),
-        String(pick(record,['Mức độ chuyển đổi'])),
-        String(pick(record,['Trạng thái'])),
-        String(pick(record,['Tỉnh/Thành'])),
-        normalizeExcelDate(pick(record,['Ngày tạo'])),
-        normalizeExcelDate(pick(record,['Ngày chuyển đổi'])),
+        String(record[columns.company]||''),
+        String(record[columns.area]||''),
+        String(record[columns.owner]||'Chưa phân công'),
+        String(record[columns.funnel]||''),
+        String(record[columns.status]||''),
+        String(record[columns.province]||''),
+        normalizeExcelDate(record[columns.created]),
+        normalizeExcelDate(record[columns.converted]),
         sourceName,
-        String(pick(record,['Nguyên nhân đóng Lead'])),
+        String(record[columns.closeReason]||''),
       ];
     }).filter(row=>['customercare','marketing'].includes(row[8].toLowerCase().replace(/\s+/g,'')))
       .map(row=>{row[8]=row[8].toLowerCase().includes('customercare')?'Customercare':'Marketing';return row});
