@@ -71,14 +71,14 @@ async function uploadSharedExcel(file){
     const workbook=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:true});
     const sourceSheetName=workbook.SheetNames.find(name=>name.toLowerCase().replace(/\s+/g,'').includes('dashboardlead'))||workbook.SheetNames[0];
     const matrix=XLSX.utils.sheet_to_json(workbook.Sheets[sourceSheetName],{header:1,defval:''});
-    const normalizeHeader=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-    const headerRowIndex=Math.max(0,matrix.findIndex(row=>row.some(cell=>normalizeHeader(cell)==='nhomphieu')&&row.some(cell=>normalizeHeader(cell)==='mucdochuyendoi')));
+    const normalizeHeader=value=>String(value||'').replace(/[đĐ]/g,'d').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const headerRowIndex=Math.max(0,matrix.findIndex(row=>row.some(cell=>normalizeHeader(cell)==='nhompheu')&&row.some(cell=>normalizeHeader(cell)==='mucdochuyendoi')));
     const headers=matrix[headerRowIndex].map(normalizeHeader);
     const index=(name,fallback)=>{const found=headers.indexOf(name);return found>=0?found:fallback};
     const columns={
       company:index('tencongty',3),area:index('mang',4),owner:index('telesalesphutrach',5),
       funnel:index('mucdochuyendoi',11),status:index('trangthai',12),province:index('tinhthanh',8),
-      created:index('ngaytao',15),converted:index('ngaychuyendoi',16),source:index('nhomphieu',10),
+      created:index('ngaytao',15),converted:index('ngaychuyendoi',16),source:index('nhompheu',10),
       closeReason:index('nguyennhandonglead',13)
     };
     const rows=matrix.slice(headerRowIndex+1).map(record=>{
