@@ -49,7 +49,11 @@ async function uploadSharedExcel(file){
   syncState.textContent='Đang cập nhật '+file.name+'…';
   try{
     const workbook=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:true});
-    const records=XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]],{defval:''});
+    const sourceSheetName=workbook.SheetNames.find(name=>name.toLowerCase().replace(/\s+/g,'').includes('dashboardlead'))||workbook.SheetNames.find(name=>{
+      const preview=XLSX.utils.sheet_to_json(workbook.Sheets[name],{header:1,defval:'',range:0}).slice(0,10);
+      return preview.some(row=>row.includes('Nhóm phểu')||row.includes('Nhóm phễu'));
+    })||workbook.SheetNames[0];
+    const records=XLSX.utils.sheet_to_json(workbook.Sheets[sourceSheetName],{defval:''});
     const pick=(record,names)=>{for(const name of names)if(Object.prototype.hasOwnProperty.call(record,name))return record[name];return ''};
     const rows=records.map(record=>{
       const sourceName=String(pick(record,['Nhóm phểu','Nhóm phễu'])).trim();
