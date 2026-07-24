@@ -122,7 +122,7 @@ async function uploadSharedExcel(file){
         String(record[columns.closeReason]||''),
       ];
     }).filter(row=>['customercare','marketing'].includes(row[8].toLowerCase().replace(/\s+/g,'')))
-      .map(row=>{row[8]=row[8].toLowerCase().includes('customercare')?'Customercare':'Marketing';return row});
+      .map(row=>{const normalizedSource=row[8].toLowerCase().replace(/\s+/g,'');row[8]=normalizedSource==='customercare'?'Customercare':'Marketing';return row});
     if(!rows.length)throw new Error('Không tìm thấy dữ liệu Customercare/Marketing');
     await fetch(SHARED_API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({rows})});
     DATA.rawLeads=mapSharedRows(rows);
