@@ -56,7 +56,10 @@ function filteredOpportunities(){
 }
 function drawOpportunities(){
   if(!optyKpis)return;
-  const rows=filteredOpportunities(),success=rows.filter(row=>/thành công/i.test(row[4])).length,failed=rows.filter(row=>/thất bại/i.test(row[4])).length,ongoing=rows.filter(row=>/đang tiến hành/i.test(row[4])).length;
+  const filtered=filteredOpportunities();
+  const filtersAreClear=source.value==='all'&&tele.value==='all'&&areaFilter.value==='all'&&timeMode.value==='all';
+  const rows=filtered.length===0&&filtersAreClear?STATIC_OPPORTUNITIES:filtered;
+  const success=rows.filter(row=>/thành công/i.test(row[4])).length,failed=rows.filter(row=>/thất bại/i.test(row[4])).length,ongoing=rows.filter(row=>/đang tiến hành/i.test(row[4])).length;
   const orderValue=rows.reduce((sum,row)=>sum+(Number(row[7])||0),0);
   const cards=[['Tổng cơ hội',rows.length,'CC0010'],['Đang tiến hành',ongoing,'Cần theo dõi'],['Thành công',success,'Opty win'],['Thất bại',failed,'Opty loss'],['Tỷ lệ thành công',rows.length?(success/rows.length*100).toFixed(1)+'%':'0.0%',orderValue?'Đơn hàng: '+fmt.format(orderValue):'']];
   optyKpis.innerHTML=cards.map(card=>'<article class="opty-card"><span>'+card[0]+'</span><strong>'+(typeof card[1]==='number'?fmt.format(card[1]):card[1])+'</strong><small>'+card[2]+'</small></article>').join('');
