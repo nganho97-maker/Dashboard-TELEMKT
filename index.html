@@ -78,7 +78,7 @@ function drawOpportunities(){
   drawOptyAnalysis(rows);
 }
 function drawOptyAnalysis(rows){
-  const allowedOptyTeles=new Set(['Há»“ Ngá»c NgÃ¢n','HoÃ ng Ngá»c PhÆ°Æ¡ng Tháº£o','LÃª HoÃ i ThÆ°Æ¡ng','LÃª HoÃ ng Thanh PhÆ°Æ¡ng','LÃª Thá»‹ Kim Loan','NgÃ´ Thá»‹ Anh ThÆ°','Nguyá»…n Thá»‹ Kim Dung','Nguyá»…n Thá»‹ Kim NgÃ¢n','Nguyá»…n Thá»‹ Quá»³nh NhÆ°','Nguyá»…n Thá»‹ Thanh Huyá»n']);
+  const allowedOptyTeles=new Set(['ho ngoc ngan','hoang ngoc phuong thao','le hoai thuong','le hoang thanh phuong','le thi kim loan','ngo thi anh thu','nguyen thi kim dung','nguyen thi kim ngan','nguyen thi quynh nhu','nguyen thi thanh huyen']);
   const norm=value=>String(value||'').replace(/[đĐ]/g,'d').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
   const success=row=>norm(row[4]).includes('thanh cong');
   const render=(target,keyFn,orderValue)=>{
@@ -89,7 +89,7 @@ function drawOptyAnalysis(rows){
   render('#optyAreaRows',row=>row[2],false);
   render('#optySourceRows',row=>row[9],false);
   const allOptyRows=rows;
-  rows=allOptyRows.filter(row=>allowedOptyTeles.has(row[5]));
+  rows=allOptyRows.filter(row=>allowedOptyTeles.has(norm(row[5])));
   render('#optyTeleRows',row=>row[5],true);
   rows=allOptyRows;
   render('#optyPeriodRows',row=>{if(!row[1])return '';const year=row[1].slice(0,4),month=Number(row[1].slice(5,7));return optyPeriod?.value==='quarter'?year+'-Q'+Math.ceil(month/3):row[1].slice(0,7)},false);
