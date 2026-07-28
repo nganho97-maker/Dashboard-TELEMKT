@@ -64,6 +64,7 @@ function drawOpportunities(){
 }
 const baseDraw=draw;
 draw=function(){baseDraw();drawOpportunities();};
+drawOpportunities();
 const periodTable=document.querySelector('#periodRows')?.closest('table');
 const periodHeaders=periodTable?.querySelectorAll('th');
 if(periodHeaders?.length){
