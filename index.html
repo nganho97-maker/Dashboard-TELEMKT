@@ -124,7 +124,9 @@ async function loadSharedData(){
     const result=await response.json();
     if(!result.ok||!Array.isArray(result.rows))throw new Error('API không trả dữ liệu');
     DATA.rawLeads=mapSharedRows(result.rows);
-    if(Array.isArray(result.opportunities))sharedOpportunities=result.opportunities;
+  // Dữ liệu OpportunityData cũ chỉ có 8 cột. Giữ bộ dữ liệu tĩnh đầy đủ
+  // cho tới khi có lượt upload mới chứa thêm Mức độ mua hàng và Nguồn tạo Lead.
+  if(Array.isArray(result.opportunities)&&result.opportunities.some(row=>String(row[8]||'').trim()||String(row[9]||'').trim()))sharedOpportunities=result.opportunities;
     fillAreaFilter();fillTele();renderTimeControl();draw();
     syncState.textContent='Dữ liệu chung · '+fmt.format(result.rows.length)+' lead · '+new Date(result.updatedAt).toLocaleString('vi-VN');
   }catch(error){
